@@ -31,7 +31,7 @@ final public class ZKCarousel: UIView, UICollectionViewDelegateFlowLayout, UICol
         control.currentPage = 0
         control.hidesForSinglePage = true
         control.pageIndicatorTintColor = .lightGray
-        control.currentPageIndicatorTintColor = UIColor(red:0.20, green:0.60, blue:0.86, alpha:1.0)
+        control.currentPageIndicatorTintColor = UIColor(red:0.47, green:0.39, blue:0.68, alpha:1.0)
         control.translatesAutoresizingMaskIntoConstraints = false
         return control
     }()
@@ -89,7 +89,7 @@ final public class ZKCarousel: UIView, UICollectionViewDelegateFlowLayout, UICol
         let visiblePoint = CGPoint(x: visibleRect.midX, y: visibleRect.midY)
         let visibleIndexPath: IndexPath = collectionView.indexPathForItem(at: visiblePoint) ?? IndexPath(item: 0, section: 0)
         let index = visibleIndexPath.item
-
+        
         if index == (slides.count-1) {
             let indexPathToShow = IndexPath(item: 0, section: 0)
             self.collectionView.selectItem(at: indexPathToShow, animated: true, scrollPosition: .centeredHorizontally)
@@ -166,31 +166,8 @@ fileprivate class carouselCollectionViewCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFill
         iv.backgroundColor = .clear
         iv.clipsToBounds = true
-        // PATCHED cause we don't want this -ms
-        // iv.addBlackGradientLayer(frame: self.bounds)
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
-    }()
-    
-    private var titleLabel : UILabel = {
-        let label = UILabel()
-        label.adjustsFontSizeToFitWidth = true
-        label.font = UIFont.boldSystemFont(ofSize: 40)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    
-    private var descriptionLabel : UILabel = {
-        let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 19)
-        label.textColor = .white
-        label.textAlignment = .center
-        label.numberOfLines = 0
-        label.backgroundColor = .clear
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
     }()
     
     override init(frame: CGRect) {
@@ -211,19 +188,6 @@ fileprivate class carouselCollectionViewCell: UICollectionViewCell {
         NSLayoutConstraint(item: self.imageView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: self.imageView, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 0).isActive = true
         NSLayoutConstraint(item: self.imageView, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: 0).isActive = true
-        
-        self.addSubview(self.descriptionLabel)
-        let left = NSLayoutConstraint(item: descriptionLabel, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 15)
-        let right = NSLayoutConstraint(item: descriptionLabel, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -15)
-        let bottom = NSLayoutConstraint(item: descriptionLabel, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 0.9, constant: 0)
-        let top = NSLayoutConstraint(item: descriptionLabel, attribute: .top, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.25, constant: 0)
-        NSLayoutConstraint.activate([left, right, bottom, top])
-        
-        self.addSubview(self.titleLabel)
-        NSLayoutConstraint(item: self.titleLabel, attribute: .left, relatedBy: .equal, toItem: self, attribute: .left, multiplier: 1.0, constant: 15).isActive = true
-        NSLayoutConstraint(item: self.titleLabel, attribute: .right, relatedBy: .equal, toItem: self, attribute: .right, multiplier: 1.0, constant: -15).isActive = true
-        NSLayoutConstraint(item: self.titleLabel, attribute: .bottom, relatedBy: .equal, toItem: self.descriptionLabel, attribute: .top, multiplier: 1.0, constant: 8).isActive = true
-        NSLayoutConstraint(item: self.titleLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 43).isActive = true
     }
     
     private func parseData(forSlide slide: ZKCarouselSlide) {
@@ -231,29 +195,17 @@ fileprivate class carouselCollectionViewCell: UICollectionViewCell {
             self.imageView.image = image
         }
         
-        if let title = slide.slideTitle {
-            self.titleLabel.text = title
-        }
-        
-        if let description = slide.slideDescription {
-            self.descriptionLabel.text = description
-        }
-        
         return
     }
-
+    
 }
 
 final public class ZKCarouselSlide : NSObject {
     
     public var slideImage : UIImage?
-    public var slideTitle : String?
-    public var slideDescription: String?
     
-    public init(image: UIImage, title: String, description: String) {
+    public init(image: UIImage) {
         slideImage = image
-        slideTitle = title
-        slideDescription = description
     }
     
     override init() {
@@ -278,15 +230,4 @@ extension UIView {
     
     
 }
-
-extension UIImageView {
-    func addBlackGradientLayer(frame: CGRect){
-        let gradient = CAGradientLayer()
-        gradient.frame = frame
-        gradient.colors = [UIColor.clear.cgColor, UIColor.black.withAlphaComponent(0.8).cgColor]
-        gradient.locations = [0.0, 0.6]
-        self.layer.insertSublayer(gradient, at: 0)
-    }
-}
-
 
