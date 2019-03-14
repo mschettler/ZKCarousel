@@ -166,7 +166,8 @@ fileprivate class carouselCollectionViewCell: UICollectionViewCell {
         iv.contentMode = .scaleAspectFill
         iv.backgroundColor = .clear
         iv.clipsToBounds = true
-        iv.addBlackGradientLayer(frame: self.bounds)
+        // PATCHED cause we don't want this -ms
+        // iv.addBlackGradientLayer(frame: self.bounds)
         iv.translatesAutoresizingMaskIntoConstraints = false
         return iv
     }()
