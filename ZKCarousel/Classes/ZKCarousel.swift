@@ -36,7 +36,7 @@ final public class ZKCarousel: UIView, UICollectionViewDelegateFlowLayout, UICol
         return control
     }()
     
-    fileprivate lazy var collectionView : UICollectionView = {
+    public lazy var collectionView : UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
