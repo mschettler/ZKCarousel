@@ -8,8 +8,14 @@
 
 import UIKit
 
+public protocol ZKCarouselEvents {
+    func didChangeSlide()
+}
+
+
 final public class ZKCarousel: UIView, UICollectionViewDelegateFlowLayout, UICollectionViewDelegate, UICollectionViewDataSource {
     
+    public var delegate: ZKCarouselEvents?
     
     public var slides : [ZKCarouselSlide] = [] {
         didSet {
@@ -143,8 +149,12 @@ final public class ZKCarousel: UIView, UICollectionViewDelegateFlowLayout, UICol
     }
     
     public func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let pageNumber = round(scrollView.contentOffset.x / scrollView.frame.size.width)
-        pageControl.currentPage = Int(pageNumber)
+        let newPageNumber = Int(round(scrollView.contentOffset.x / scrollView.frame.size.width))
+        
+        if newPageNumber != pageControl.currentPage {
+            pageControl.currentPage = newPageNumber
+            self.delegate?.didChangeSlide()
+        }
     }
     
 }
